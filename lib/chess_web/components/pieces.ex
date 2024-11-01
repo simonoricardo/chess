@@ -5,12 +5,15 @@ defmodule ChessWeb.Components.Pieces do
 
   @doc """
       Example: 
-      <.piece type="king" column={@column} row={@row} size={@size} />
+      <.piece colour="white" type="king" column={@column} row={@row} size={@size} />
   """
   def piece(assigns) do
     ~H"""
     <div
-      class="absolute aspect-square text-slate-700 "
+      class={[
+        "absolute aspect-square",
+        if(@colour == :white, do: "text-neutral-200", else: "text-neutral-800")
+      ]}
       style={"grid-column: #{Boards.convert_letters_to_number(@column)}; grid-row: #{@row}; width: #{@size}px;"}
     >
       <.piece_svg type={@type} size={@size} />
@@ -18,7 +21,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  defp piece_svg(%{type: "rook"} = assigns) do
+  defp piece_svg(%{type: :rook} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -144,7 +147,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  defp piece_svg(%{type: "queen"} = assigns) do
+  defp piece_svg(%{type: :queen} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -306,7 +309,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  defp piece_svg(%{type: "pawn"} = assigns) do
+  defp piece_svg(%{type: :pawn} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -411,7 +414,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  defp piece_svg(%{type: "knight"} = assigns) do
+  defp piece_svg(%{type: :knight} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -501,7 +504,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  defp piece_svg(%{type: "bishop"} = assigns) do
+  defp piece_svg(%{type: :bishop} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -639,7 +642,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  defp piece_svg(%{type: "king"} = assigns) do
+  defp piece_svg(%{type: :king} = assigns) do
     ~H"""
     <svg
       class="p-2"

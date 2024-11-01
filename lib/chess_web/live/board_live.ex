@@ -3,12 +3,16 @@ defmodule ChessWeb.BoardLive do
   import ChessWeb.Components.Board
 
   alias Chess.Board.Boards
+  alias Chess.Game.Games
 
   def mount(_params, _uri, socket) do
+    game_state = Games.generate_game_start_state()
+
     socket =
       socket
       |> assign(:board, Boards.generate())
       |> assign(:square_size, 0)
+      |> assign(:game_state, game_state)
 
     {:ok, socket}
   end

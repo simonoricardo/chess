@@ -12,14 +12,22 @@ defmodule ChessWeb.Components.Board do
       <%= for square <- @board do %>
         <.square square={square} />
       <% end %>
-      <.piece type="king" column="D" row="1" size={@square_size} />
+      <%= for piece <- @game_state do %>
+        <.piece
+          type={piece.type}
+          colour={piece.colour}
+          column={piece.column}
+          row={piece.row}
+          size={@square_size}
+        />
+      <% end %>
     </div>
     """
   end
 
   def square(assigns) do
     ~H"""
-    <div class="square flex items-center justify-center"></div>
+    <div class="square flex items-center justify-center" />
     """
   end
 end
