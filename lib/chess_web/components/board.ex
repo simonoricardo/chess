@@ -12,7 +12,7 @@ defmodule ChessWeb.Components.Board do
       <%= for square <- @board do %>
         <.square square={square} />
       <% end %>
-      <%= for piece <- @game_state do %>
+      <%= for piece <- @game_state.pieces do %>
         <.piece
           type={piece.type}
           colour={piece.colour}

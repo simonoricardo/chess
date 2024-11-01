@@ -11,8 +11,9 @@ defmodule ChessWeb.Components.Pieces do
     ~H"""
     <div
       class={[
-        "absolute aspect-square",
-        if(@colour == :white, do: "text-neutral-200", else: "text-neutral-800")
+        "absolute aspect-square cursor-pointer",
+        if(@colour == :white, do: "text-neutral-200", else: "text-neutral-700"),
+        "hover:-translate-y-0.5 hover:translate-x-0.5 transition-transform"
       ]}
       style={"grid-column: #{Boards.convert_letters_to_number(@column)}; grid-row: #{@row}; width: #{@size}px;"}
     >
@@ -323,7 +324,7 @@ defmodule ChessWeb.Components.Pieces do
       version="1.0"
     >
       <defs>
-        <clipPath id="ba913f5032">
+        <clipPath>
           <path
             d="M 574 2742 L 2426 2742 L 2426 2999.71875 L 574 2999.71875 Z M 574 2742 "
             clip-rule="nonzero"
@@ -656,7 +657,7 @@ defmodule ChessWeb.Components.Pieces do
       version="1.0"
     >
       <defs>
-        <clipPath id="e47ef6b95c">
+        <clipPath>
           <path
             d="M 905.453125 2834 L 2094.203125 2834 L 2094.203125 3000 L 905.453125 3000 Z M 905.453125 2834 "
             clip-rule="nonzero"
