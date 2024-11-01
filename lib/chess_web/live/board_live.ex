@@ -14,7 +14,6 @@ defmodule ChessWeb.BoardLive do
   end
 
   def handle_event("square-size", %{"square_size" => size}, socket) do
-    IO.inspect("EVENT")
     socket = assign(socket, :square_size, size)
     {:noreply, socket}
   end
