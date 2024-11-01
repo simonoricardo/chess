@@ -3,6 +3,7 @@ defmodule Chess.Game.Games do
 
   def generate_game_start_state() do
     %{
+      turn: :white,
       pieces: [
         %{type: :pawn, colour: :white, column: "A", row: 7},
         %{type: :pawn, colour: :white, column: "B", row: 7},
