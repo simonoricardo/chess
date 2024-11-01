@@ -3,20 +3,11 @@ defmodule ChessWeb.Components.Pieces do
 
   alias Chess.Board.Boards
 
-  defmacro inline_svg(path) do
-    case File.read(path) do
-      {:ok, file} -> quote do: {:safe, unquote(file)}
-      {:error, _} -> raise "No SVG found at #{path}"
-    end
-  end
-
-  def king(assigns) do
-    ~H"""
-    <.piece type="king" column={@column} row={@row} size={@size} />
-    """
-  end
-
-  defp piece(assigns) do
+  @doc """
+      Example: 
+      <.piece type="king" column={@column} row={@row} size={@size} />
+  """
+  def piece(assigns) do
     ~H"""
     <div
       class="absolute aspect-square text-slate-700 "
@@ -27,15 +18,16 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  def piece_svg(%{type: "rook"} = assigns) do
+  defp piece_svg(%{type: "rook"} = assigns) do
     ~H"""
     <svg
+      class="p-2"
+      height={@size}
+      width={@size}
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-      width="4000"
       zoomAndPan="magnify"
       viewBox="0 0 3000 2999.999989"
-      height="4000"
       preserveAspectRatio="xMidYMid meet"
       version="1.0"
     >
@@ -152,7 +144,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  def piece_svg(%{type: "queen"} = assigns) do
+  defp piece_svg(%{type: "queen"} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -314,7 +306,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  def piece_svg(%{type: "pawn"} = assigns) do
+  defp piece_svg(%{type: "pawn"} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -419,7 +411,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  def piece_svg(%{type: "knight"} = assigns) do
+  defp piece_svg(%{type: "knight"} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -509,7 +501,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  def piece_svg(%{type: "bishop"} = assigns) do
+  defp piece_svg(%{type: "bishop"} = assigns) do
     ~H"""
     <svg
       class="p-2"
@@ -647,7 +639,7 @@ defmodule ChessWeb.Components.Pieces do
     """
   end
 
-  def piece_svg(%{type: "king"} = assigns) do
+  defp piece_svg(%{type: "king"} = assigns) do
     ~H"""
     <svg
       class="p-2"

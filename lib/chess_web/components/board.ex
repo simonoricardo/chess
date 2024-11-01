@@ -12,7 +12,7 @@ defmodule ChessWeb.Components.Board do
       <%= for square <- @board do %>
         <.square square={square} />
       <% end %>
-      <.king column="D" row="8" size={@square_size} />
+      <.piece type="king" column="D" row="1" size={@square_size} />
     </div>
     """
   end
