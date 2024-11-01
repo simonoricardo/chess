@@ -1,18 +1,10 @@
 # Chess
 
-To start your Phoenix server:
+A naive implementation of a Chess game / engine / etc.
+Not sure yet what this is going to be exactly.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+The goal is to experiment with different data structure and algorithms,
+while leveraging the real time aspects of Elixir/Erlang and OTP.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+There may or may not be an AI at some point to play against.
+This README will be updated once this project is deployed somewhere
