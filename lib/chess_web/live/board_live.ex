@@ -29,8 +29,6 @@ defmodule ChessWeb.BoardLive do
         String.to_integer(id) == piece.id
       end)
 
-    IO.inspect(piece)
-
     coloured_squares =
       Enum.map(piece.moves, fn %{row: row, column: column} ->
         (row - 1) * 8 + column
