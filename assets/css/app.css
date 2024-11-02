@@ -2,7 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* This file is for your main application CSS */
 @layer utilities {
   .board div:nth-child(even):nth-child(-n + 8),
   .board div:nth-child(n + 8):nth-child(-n + 16):nth-child(odd),
