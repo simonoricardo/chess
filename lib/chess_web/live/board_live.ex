@@ -14,6 +14,7 @@ defmodule ChessWeb.BoardLive do
       socket
       |> assign(:square_size, 0)
       |> assign(:selected_piece, nil)
+      |> assign(:coloured_squares, [])
       |> assign(:board, Boards.generate())
       |> assign(:game_state, game_state)
 
@@ -29,7 +30,16 @@ defmodule ChessWeb.BoardLive do
       end)
 
     IO.inspect(piece)
-    socket = assign(socket, :selected_piece, piece)
+
+    coloured_squares =
+      Enum.map(piece.moves, fn %{row: row, column: column} ->
+        (row - 1) * 8 + column
+      end)
+
+    socket =
+      socket
+      |> assign(:selected_piece, piece)
+      |> assign(:coloured_squares, coloured_squares)
 
     {:noreply, socket}
   end
@@ -41,7 +51,9 @@ defmodule ChessWeb.BoardLive do
 
   def render(assigns) do
     ~H"""
-    <.board {assigns} />
+    <div class="my-auto">
+      <.board {assigns} />
+    </div>
     """
   end
 end

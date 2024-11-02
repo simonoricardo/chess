@@ -52,7 +52,8 @@ defmodule ChessWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {ChessWeb.Layouts, :app}
+        layout: {ChessWeb.Layouts, :app},
+        container: {:main, class: "h-full"}
 
       unquote(html_helpers())
     end

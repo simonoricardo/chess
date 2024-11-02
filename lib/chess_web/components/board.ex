@@ -15,6 +15,7 @@ defmodule ChessWeb.Components.Board do
           index={index}
           length={length(@board)}
           selected_piece={@selected_piece}
+          coloured={(index + 1) in @coloured_squares}
         />
       <% end %>
       <%= for piece <- @game_state.pieces do %>
@@ -35,7 +36,7 @@ defmodule ChessWeb.Components.Board do
     ~H"""
     <div
       class="square flex items-center justify-center"
-      style={"order: #{@length - @index}"}
+      style={"order: #{@length - @index};  background-color: #{if(@coloured, do: "var(--moves)")};"}
       id={"square-#{@index + 1}"}
     />
     """
