@@ -10,12 +10,15 @@ defmodule ChessWeb.Components.Pieces do
   def piece(assigns) do
     ~H"""
     <div
+      id={"piece-#{@id}"}
       class={[
-        "absolute aspect-square cursor-pointer",
+        "absolute aspect-square cursor-pointer -scale-x-100",
         if(@colour == :white, do: "text-neutral-200", else: "text-neutral-700"),
         "hover:-translate-y-0.5 hover:translate-x-0.5 transition-transform"
       ]}
-      style={"grid-column: #{Boards.convert_letters_to_number(@column)}; grid-row: #{@row}; width: #{@size}px;"}
+      style={"grid-column: #{9 - Boards.convert_letters_to_number(@column)}; grid-row: #{9 - @row}; width: #{@size}px;"}
+      phx-click="show_moves"
+      phx-value-id={@id}
     >
       <.piece_svg type={@type} size={@size} />
     </div>
