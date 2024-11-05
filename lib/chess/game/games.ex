@@ -23,8 +23,8 @@ defmodule Chess.Game.Games do
         %{type: :queen, colour: :white, column: "D", row: 1, has_moved: false, id: 15},
         %{type: :king, colour: :white, column: "E", row: 1, has_moved: false, id: 16},
         %{type: :pawn, colour: :black, column: "A", row: 7, has_moved: false, id: 17},
-        %{type: :pawn, colour: :black, column: "B", row: 7, has_moved: false, id: 18},
-        %{type: :pawn, colour: :black, column: "C", row: 7, has_moved: false, id: 19},
+        %{type: :pawn, colour: :black, column: "B", row: 3, has_moved: false, id: 18},
+        %{type: :pawn, colour: :black, column: "C", row: 3, has_moved: false, id: 19},
         %{type: :pawn, colour: :black, column: "D", row: 7, has_moved: false, id: 20},
         %{type: :pawn, colour: :black, column: "E", row: 7, has_moved: false, id: 21},
         %{type: :pawn, colour: :black, column: "F", row: 7, has_moved: false, id: 22},
@@ -58,23 +58,58 @@ defmodule Chess.Game.Games do
 
   def get_legal_move(
         %{pieces: all_pieces} = _state,
-        %{type: :pawn, row: p_row, column: p_column, has_moved: false, id: _p_id} = _playing_piece
+        %{
+          type: :pawn,
+          row: previous_row,
+          column: previous_column,
+          has_moved: false,
+          id: previous_id
+        } =
+          playing_piece
       ) do
-    p_column = Boards.convert_letters_to_number(p_column)
+    previous_column = Boards.convert_letters_to_number(previous_column)
 
-    possible_pawn_moves(p_row, p_column)
+    # if previous_column == 3 do
+    #   IO.inspect(playing_piece, label: "playing piece")
+    # end
+
+    possible_pawn_moves(previous_row, previous_column)
     |> Enum.map(fn %{row: new_row, column: new_column} = move ->
-      found_collision =
-        Enum.find(all_pieces, fn %{row: row, column: column, id: _id} = _piece ->
-          column = Boards.convert_letters_to_number(column)
-          row == new_row and column == new_column
-        end)
+      collision =
+        Enum.find(
+          all_pieces,
+          fn
+            %{row: row, column: column, id: id} when previous_id != id ->
+              column = Boards.convert_letters_to_number(column)
+
+              case {row, column} do
+                {r, c} when new_row == r and c == new_column -> true
+                {r, c} when r < new_row and r > previous_row and c == new_column -> true
+                _ -> false
+              end
+
+            _ ->
+              nil
+          end
+        )
+
+      if previous_row == 2 and previous_column == 3 do
+        IO.inspect(collision, label: "list of collisions")
+        # IO.inspect({new_row, new_column}, label: "new positions")
+      end
 
       cond do
-        not is_nil(found_collision) and new_column != found_collision.column -> move
-        not is_nil(found_collision) and new_column == found_collision.column -> nil
-        is_nil(found_collision) and new_column == p_column -> move
-        is_nil(found_collision) and new_column != p_column -> nil
+        not is_nil(collision) and new_column != previous_column ->
+          move
+
+        not is_nil(collision) and new_column == previous_column ->
+          nil
+
+        is_nil(collision) and new_column == previous_column ->
+          move
+
+        is_nil(collision) and new_column != previous_column ->
+          nil
       end
     end)
     |> Enum.reject(&(&1 == nil))
@@ -94,11 +129,11 @@ defmodule Chess.Game.Games do
       },
       %{
         row: row + 1,
-        column: column + 1
+        column: min(column + 1, 8)
       },
       %{
         row: row + 1,
-        column: column - 1
+        column: max(column - 1, 1)
       }
     ]
   end
