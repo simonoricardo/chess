@@ -8,7 +8,7 @@ defmodule ChessWeb.BoardLive do
   def mount(_params, _uri, socket) do
     game_state =
       Games.generate_game_start_state()
-      |> Games.generate_possible_moves()
+      |> Games.generate_possible_moves_for_player()
 
     socket =
       socket

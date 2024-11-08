@@ -42,99 +42,118 @@ defmodule Chess.Game.Games do
     }
   end
 
-  def generate_possible_moves(%{turn: colour, pieces: pieces} = state) do
+  def generate_possible_moves_for_player(%{turn: colour, pieces: pieces} = current_state) do
     result =
       pieces
       |> Enum.filter(&(&1.colour === colour))
       |> Enum.map(fn piece ->
-        moves = get_legal_move(state, piece)
+        moves = get_legal_moves_for_specific_piece(current_state, piece)
         Map.put(piece, :moves, moves)
       end)
 
     all_pieces = result ++ pieces
 
-    %{state | pieces: Enum.uniq_by(all_pieces, & &1.id)}
+    %{current_state | pieces: Enum.uniq_by(all_pieces, & &1.id)}
   end
 
-  def get_legal_move(
+  def get_legal_moves_for_specific_piece(
         %{pieces: all_pieces} = _state,
         %{
           type: :pawn,
-          row: previous_row,
-          column: previous_column,
+          row: current_row,
+          column: current_column,
           has_moved: false,
           id: previous_id
-        } =
-          playing_piece
+        }
       ) do
-    previous_column = Boards.convert_letters_to_number(previous_column)
+    current_column = Boards.convert_letters_to_number(current_column)
 
-    # if previous_column == 3 do
-    #   IO.inspect(playing_piece, label: "playing piece")
-    # end
+    %{row: current_row, column: current_column}
+    |> get_possible_moves_for_piece_type(:pawn)
+    |> get_legal_moves(all_pieces, %{type: :pawn, id: previous_id})
+  end
 
-    possible_pawn_moves(previous_row, previous_column)
-    |> Enum.map(fn %{row: new_row, column: new_column} = move ->
-      collision =
-        Enum.find(
-          all_pieces,
-          fn
-            %{row: row, column: column, id: id} when previous_id != id ->
-              column = Boards.convert_letters_to_number(column)
+  def get_legal_moves_for_specific_piece(_state, _playing_piece), do: []
 
-              case {row, column} do
-                {r, c} when new_row == r and c == new_column -> true
-                {r, c} when r < new_row and r > previous_row and c == new_column -> true
-                _ -> false
-              end
+  defp get_possible_moves_for_piece_type(%{row: row, column: column}, :pawn) do
+    %{
+      moves: [
+        %{
+          row: row + 1,
+          column: column
+        },
+        %{
+          row: row + 2,
+          column: column
+        },
+        %{
+          row: row + 1,
+          column: min(column + 1, 8)
+        },
+        %{
+          row: row + 1,
+          column: max(column - 1, 1)
+        }
+      ],
+      current_row: row,
+      current_column: column
+    }
+  end
 
-            _ ->
-              nil
-          end
-        )
+  defp get_legal_moves(
+         %{moves: possible_moves, current_row: current_row, current_column: current_column},
+         all_pieces,
+         %{type: :pawn, id: pawn_id}
+       ) do
+    pawn_data = %{
+      type: :pawn,
+      id: pawn_id,
+      current_column: current_column,
+      current_row: current_row
+    }
 
-      if previous_row == 2 and previous_column == 3 do
-        IO.inspect(collision, label: "list of collisions")
-        # IO.inspect({new_row, new_column}, label: "new positions")
-      end
+    Enum.map(possible_moves, fn %{column: new_column} = move ->
+      collision_data = check_for_collision(all_pieces, move, pawn_data)
 
       cond do
-        not is_nil(collision) and new_column != previous_column ->
+        collision_data && new_column != current_column ->
+          # {:ok, move, :empty}
           move
 
-        not is_nil(collision) and new_column == previous_column ->
-          nil
-
-        is_nil(collision) and new_column == previous_column ->
+        !collision_data && new_column == current_column ->
           move
 
-        is_nil(collision) and new_column != previous_column ->
+        true ->
           nil
       end
     end)
     |> Enum.reject(&(&1 == nil))
   end
 
-  def get_legal_move(_state, _playing_piece), do: []
+  defp check_for_collision(all_pieces, %{row: new_row, column: new_column}, %{
+         type: :pawn,
+         id: pawn_id,
+         current_row: current_row
+       }) do
+    Enum.find(
+      all_pieces,
+      false,
+      fn
+        %{row: occupied_row, column: occupied_column, id: occupied_id}
+        when pawn_id != occupied_id ->
+          occupied_column = Boards.convert_letters_to_number(occupied_column)
 
-  defp possible_pawn_moves(row, column) do
-    [
-      %{
-        row: row + 1,
-        column: column
-      },
-      %{
-        row: row + 2,
-        column: column
-      },
-      %{
-        row: row + 1,
-        column: min(column + 1, 8)
-      },
-      %{
-        row: row + 1,
-        column: max(column - 1, 1)
-      }
-    ]
+          case {occupied_row, occupied_column} do
+            {r, c} when new_row == r and c == new_column -> true
+            {r, c} when r < new_row and r > current_row and c == new_column -> true
+            _ -> false
+          end
+
+        _ ->
+          false
+      end
+    )
   end
+
+  defp check_for_collision(_all_pieces, _, _), do: false
 end
